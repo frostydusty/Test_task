@@ -24,12 +24,15 @@ st.markdown("### Instructions")
 st.markdown("""
 Please try all three chatbots with the test questions and rate them on the four criteria below (0-10 scale):
 
-**Chatbot Links:**  
-<div style="display: flex; justify-content: space-between; gap: 2rem;">
-    <div>🤖 Centralized RAG: <a href="https://centralizedragfederatedragretrievalextraction-muzd7d9dyusdfdx8.streamlit.app/" target="_blank">Try Here</a></div>
-    <div>🌐 Federated RAG: <a href="https://centralizedragfederatedragretrievalextraction-5wpagru28pbenjvj.streamlit.app/" target="_blank">Try Here</a></div>
-    <div>🔍 Retrieval-Based: <a href="https://centralizedragfederatedragretrievalextraction-cbu8gfp3nwzjwfdt.streamlit.app/" target="_blank">Try Here</a></div>
-</div>
+### Chatbot Links
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.markdown("🤖 **Centralized RAG**  \n[Try Here](https://centralizedragfederatedragretrievalextraction-muzd7d9dyusdfdx8.streamlit.app/)")
+with col2:
+    st.markdown("🌐 **Federated RAG**  \n[Try Here](https://centralizedragfederatedragretrievalextraction-5wpagru28pbenjvj.streamlit.app/)")
+with col3:
+    st.markdown("🔍 **Retrieval-Based**  \n[Try Here](https://centralizedragfederatedragretrievalextraction-cbu8gfp3nwzjwfdt.streamlit.app/)")
+
 """)
 criteria = [
     {"name": "Relevance", "key": "relevance"},
