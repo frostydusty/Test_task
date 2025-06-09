@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Minimal header
+# Header
 st.markdown("""
 <div style="text-align: center; margin-bottom: 1rem;">
     <h3>Chatbot Evaluation Survey</h3>
@@ -19,45 +19,58 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Instructions
-st.markdown("### Instructions")
-st.markdown("""
-Please try all three chatbots with the test questions and rate them on the four criteria below (0-10 scale):
-
-**Chatbot Links:**
-- Centralized RAG: [Try Here](https://centralizedragfederatedragretrievalextraction-muzd7d9dyusdfdx8.streamlit.app/)
-- Federated RAG: [Try Here](https://centralizedragfederatedragretrievalextraction-5wpagru28pbenjvj.streamlit.app/)
-- Retrieval-Based: [Try Here](https://centralizedragfederatedragretrievalextraction-cbu8gfp3nwzjwfdt.streamlit.app/)
-""")
-criteria = [
-    {"name": "Relevance", "key": "relevance"},
-    {"name": "Coherence", "key": "coherence"},
-    {"name": "Ambiguity Handling", "key": "ambiguity"},
-    {"name": "User Satisfaction", "key": "satisfaction"}
-]
-chatbots = [
-    {"name": "Centralized RAG", "key": "centralized"},
-    {"name": "Federated RAG", "key": "federated"},
-    {"name": "Retrieval-Based", "key": "retrieval"}
-]
-
+# Session init
 if 'survey_data' not in st.session_state:
     st.session_state.survey_data = {}
 
-for criterion in criteria:
-    st.markdown(f"#### {criterion['name']}")
-    col1, col2, col3 = st.columns(3)
-    for i, col in enumerate([col1, col2, col3]):
-        with col:
-            chatbot = chatbots[i]
-            score_key = f"{criterion['key']}_{chatbot['key']}"
-            score = st.slider(f"{chatbot['name']}", 0, 10, st.session_state.survey_data.get(score_key, 5), key=score_key)
-            st.session_state.survey_data[score_key] = score
+# Chatbot rating section
+st.markdown("### Centralized RAG")
 
-st.markdown("### Feedback")
-feedback = st.text_area("Additional feedback:", height=100, key="open_feedback")
+relevance_centralized = st.slider("Relevance (0-10)", 0, 10, st.session_state.survey_data.get("relevance_centralized", 5), key="relevance_centralized")
+st.session_state.survey_data["relevance_centralized"] = relevance_centralized
+
+coherence_centralized = st.slider("Coherence (0-10)", 0, 10, st.session_state.survey_data.get("coherence_centralized", 5), key="coherence_centralized")
+st.session_state.survey_data["coherence_centralized"] = coherence_centralized
+
+ambiguity_centralized = st.slider("Ambiguity Handling (0-10)", 0, 10, st.session_state.survey_data.get("ambiguity_centralized", 5), key="ambiguity_centralized")
+st.session_state.survey_data["ambiguity_centralized"] = ambiguity_centralized
+
+satisfaction_centralized = st.slider("User Satisfaction (0-10)", 0, 10, st.session_state.survey_data.get("satisfaction_centralized", 5), key="satisfaction_centralized")
+st.session_state.survey_data["satisfaction_centralized"] = satisfaction_centralized
+st.markdown("### Federated RAG")
+
+relevance_federated = st.slider("Relevance (0-10)", 0, 10, st.session_state.survey_data.get("relevance_federated", 5), key="relevance_federated")
+st.session_state.survey_data["relevance_federated"] = relevance_federated
+
+coherence_federated = st.slider("Coherence (0-10)", 0, 10, st.session_state.survey_data.get("coherence_federated", 5), key="coherence_federated")
+st.session_state.survey_data["coherence_federated"] = coherence_federated
+
+ambiguity_federated = st.slider("Ambiguity Handling (0-10)", 0, 10, st.session_state.survey_data.get("ambiguity_federated", 5), key="ambiguity_federated")
+st.session_state.survey_data["ambiguity_federated"] = ambiguity_federated
+
+satisfaction_federated = st.slider("User Satisfaction (0-10)", 0, 10, st.session_state.survey_data.get("satisfaction_federated", 5), key="satisfaction_federated")
+st.session_state.survey_data["satisfaction_federated"] = satisfaction_federated
+st.markdown("### Retrieval-Based")
+
+relevance_retrieval = st.slider("Relevance (0-10)", 0, 10, st.session_state.survey_data.get("relevance_retrieval", 5), key="relevance_retrieval")
+st.session_state.survey_data["relevance_retrieval"] = relevance_retrieval
+
+coherence_retrieval = st.slider("Coherence (0-10)", 0, 10, st.session_state.survey_data.get("coherence_retrieval", 5), key="coherence_retrieval")
+st.session_state.survey_data["coherence_retrieval"] = coherence_retrieval
+
+ambiguity_retrieval = st.slider("Ambiguity Handling (0-10)", 0, 10, st.session_state.survey_data.get("ambiguity_retrieval", 5), key="ambiguity_retrieval")
+st.session_state.survey_data["ambiguity_retrieval"] = ambiguity_retrieval
+
+satisfaction_retrieval = st.slider("User Satisfaction (0-10)", 0, 10, st.session_state.survey_data.get("satisfaction_retrieval", 5), key="satisfaction_retrieval")
+st.session_state.survey_data["satisfaction_retrieval"] = satisfaction_retrieval
+
+
+# Feedback section
+st.markdown("### Open Feedback")
+feedback = st.text_area("Please share any feedback:", height=100, key="open_feedback")
 st.session_state.survey_data['open_feedback'] = feedback
 
+# Function to save data
 def save_survey_data(data):
     data['timestamp'] = datetime.datetime.now().isoformat()
     df = pd.DataFrame([data])
@@ -68,8 +81,9 @@ def save_survey_data(data):
     df.to_csv(csv_file, index=False)
     return len(df)
 
+# Submit button
 if st.button("Submit Survey"):
-    required_scores = [f"{c['key']}_{b['key']}" for c in criteria for b in chatbots]
+    required_scores = [f"{c}_{b}" for c in ["relevance", "coherence", "ambiguity", "satisfaction"] for b in ["centralized", "federated", "retrieval"]]
     if all(k in st.session_state.survey_data for k in required_scores):
         count = save_survey_data(st.session_state.survey_data)
         st.success(f"Submitted! Response #{count}")
