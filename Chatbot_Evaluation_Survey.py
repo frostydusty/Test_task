@@ -73,5 +73,11 @@ if st.button("Submit Survey"):
     if all(k in st.session_state.survey_data for k in required_scores):
         count = save_survey_data(st.session_state.survey_data)
         st.success(f"Submitted! Response #{count}")
+        st.download_button(
+            label="📥 Download Your Response",
+            data=json.dumps(st.session_state.survey_data, indent=2),
+            file_name=f"survey_response_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+            mime="application/json"
+        )
     else:
         st.error("Please complete all ratings before submitting.")
