@@ -24,10 +24,12 @@ st.markdown("### Instructions")
 st.markdown("""
 Please try all three chatbots with the test questions and rate them on the four criteria below (0-10 scale):
 
-**Chatbot Links:**
-- Centralized RAG: [Try Here](https://centralizedragfederatedragretrievalextraction-muzd7d9dyusdfdx8.streamlit.app/)
-- Federated RAG: [Try Here](https://centralizedragfederatedragretrievalextraction-5wpagru28pbenjvj.streamlit.app/)
-- Retrieval-Based: [Try Here](https://centralizedragfederatedragretrievalextraction-cbu8gfp3nwzjwfdt.streamlit.app/)
+**Chatbot Links:**  
+<div style="display: flex; justify-content: space-between; gap: 2rem;">
+    <div>🤖 Centralized RAG: <a href="https://centralizedragfederatedragretrievalextraction-muzd7d9dyusdfdx8.streamlit.app/" target="_blank">Try Here</a></div>
+    <div>🌐 Federated RAG: <a href="https://centralizedragfederatedragretrievalextraction-5wpagru28pbenjvj.streamlit.app/" target="_blank">Try Here</a></div>
+    <div>🔍 Retrieval-Based: <a href="https://centralizedragfederatedragretrievalextraction-cbu8gfp3nwzjwfdt.streamlit.app/" target="_blank">Try Here</a></div>
+</div>
 """)
 criteria = [
     {"name": "Relevance", "key": "relevance"},
@@ -51,21 +53,20 @@ for criterion in criteria:
         with col:
             chatbot = chatbots[i]
             score_key = f"{criterion['key']}_{chatbot['key']}"
-            score = st.slider(f"{chatbot['name']}", 0, 10, st.session_state.survey_data.get(score_key, 5), key=score_key)
+            score = st.slider(
+    f"{chatbot['name']}\n(0 = Very Poor, 10 = Excellent)",
+    min_value=0,
+    max_value=10,
+    value=st.session_state.survey_data.get(score_key, 5),
+    step=1,
+    key=score_key,
+    help="Use the slider to rate from 0 (Very Poor) to 10 (Excellent)"
+)
             st.session_state.survey_data[score_key] = score
 
 st.markdown("### Feedback")
 feedback = st.text_area("Additional feedback:", height=100, key="open_feedback")
 st.session_state.survey_data['open_feedback'] = feedback
-
-st.markdown("### Participant Info (Optional)")
-col1, col2 = st.columns(2)
-with col1:
-    participant_id = st.text_input("Participant ID:", key="participant_id")
-    st.session_state.survey_data['participant_id'] = participant_id
-with col2:
-    background = st.selectbox("Educational Background:", ["", "CS", "Eng", "Math", "Biz", "Other"], key="background")
-    st.session_state.survey_data['background'] = background
 
 def save_survey_data(data):
     data['timestamp'] = datetime.datetime.now().isoformat()
