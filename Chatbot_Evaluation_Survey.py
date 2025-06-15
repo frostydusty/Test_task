@@ -6,6 +6,22 @@ import json
 import os
 
 st.set_page_config(
+
+# Informed Consent
+st.markdown("""
+### Informed Consent
+
+Thank you for your interest in this study.
+
+This research is conducted by MSc AI Online students at the University of Hull to evaluate the performance of different chatbot systems. Your participation is voluntary, and you may withdraw at any time before submitting the survey. You may also skip any question you do not wish to answer. All responses are anonymous and will only be used for academic purposes.
+
+Please confirm that you have read and understood the above information and that you agree to participate in this survey.
+""")
+consent_given = st.checkbox("I agree and give my informed consent to participate in this survey.")
+
+if not consent_given:
+    st.warning("You must provide consent to continue.")
+    st.stop()
     page_title="Chatbot Evaluation Survey",
     layout="wide",
     initial_sidebar_state="expanded"
