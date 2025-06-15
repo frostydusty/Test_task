@@ -6,6 +6,10 @@ import json
 import os
 
 st.set_page_config(
+    page_title="Chatbot Evaluation Survey",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Informed Consent
 st.markdown("""
@@ -22,10 +26,6 @@ consent_given = st.checkbox("I agree and give my informed consent to participate
 if not consent_given:
     st.warning("You must provide consent to continue.")
     st.stop()
-    page_title="Chatbot Evaluation Survey",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 # Header
 st.markdown("""
